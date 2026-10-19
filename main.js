@@ -1,3 +1,6 @@
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
 const { Command } = require("commander");
 
 const program = new Command();
@@ -19,4 +22,20 @@ if (!options.input || !options.host || !options.port) {
   process.exit(1);
 }
 
-console.log(options);
+const inputPath = path.resolve(options.input);
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+  res.end("OK");
+});
+
+fs.access(inputPath, fs.constants.F_OK, (err) => {
+  if (err) {
+    console.error("Cannot find input file");
+    process.exit(1);
+  }
+
+  server.listen(options.port, options.host, () => {
+    console.log(`Server is listening on http://${options.host}:${options.port}`);
+  });
+});
