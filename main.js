@@ -1,0 +1,1 @@
+console.log("backend-course-2025-4: варіант 6, titanic.json");
